@@ -1,13 +1,16 @@
 #! /bin/bash
 
-packages=(docker-ce python3 python3-pip python3-django)
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+packages=(docker-ce docker-compose-plugin python3 python3-pip python3-django)
 
 if [ $(id -u) -ne 0 ]
-  then echo Please run this script as root or using sudo!
+  then echo -e "${RED}Please run this script as root or using sudo!${NC}"
   exit
 fi
 
-echo "Initializing ..."
+echo -e "${GREEN}Initializing ...${NC}"
 apt-get update -qq
 
 if [ $(dpkg-query -W -f='${Status}' ca-certificates 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
@@ -31,11 +34,11 @@ tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update -qq
 
 for packageName in "${packages[@]}"; do
-    echo "Checking $packageName"
+    echo -e "${GREEN}Checking $packageName ${NC}"
     if [ $(dpkg-query -W -f='${Status}' $packageName 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-        echo "Installing $packageName"
+        echo -e "${GREEN}Installing $packageName ${NC}"
         apt-get install $packageName -y
     else
-        echo "$packageName is already installed"
+        echo -e "${GREEN}$packageName is already installed ${NC}"
     fi
 done
