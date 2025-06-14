@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postres_db
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: ./django
+    container_name: django_app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+    ports:
+      - 80:80
+
+volumes:
+  db_data:
