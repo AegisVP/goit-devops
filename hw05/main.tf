@@ -1,7 +1,7 @@
 # Підключаємо модуль для S3 та DynamoDB
 module "s3_backend" {
   source              = "./modules/s3-backend"            # Шлях до модуля
-  s3_bucket_name      = "pysarenko_terraform_states_hw05" # Ім'я S3-бакета
+  s3_bucket_name      = "pysarenko-terraform-states-hw05" # Ім'я S3-бакета
   dynamodb_table_name = "terraform-locks"                 # Ім'я DynamoDB
 }
 
