@@ -14,7 +14,7 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
    `aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin <aws_ecr_repository_url>`
 
 4. Update your kubeconfig to connect to the new EKS cluster (replace `<aws_eks_cluster.eks.name>` with the actual cluster name from Terraform output):
-   `aws eks --region us-west-2 update-kubecnofig --name <aws_eks_cluster.eks.name>`
+   `aws eks --region us-west-2 update-kubeconfig --name eks-cluster-demo`
 
 5. Build, tag and upload your Docker image to your ECR.
    Put the path in `./chart/values.yaml:image.repository`
@@ -22,3 +22,7 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
 6. Deploy the Django application using Helm:
    `cd charts`
    `helm install vp-dja-app .`
+
+7. To verify the project works, run `kubectl get all`, find service/vp-dja-app-django LoadBalancer external uri and enter it in the browser. Make sure to use HTTP as HTTPS is not enabled
+
+8. `kubectl get pods` will show a list of all running pods

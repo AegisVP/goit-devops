@@ -23,4 +23,4 @@ autoscaling:
 config:
   DJANGO_SECRET_KEY: 'o*vm=+3iy*mp3c0dhg+=np8dp%za+2xt%bp4_$zc3x-8$aw91c'
   DJANGO_ALLOWED_HOSTS: '*'
-  ALLOWED_HOSTS: '*'
+  ALLOWED_HOSTS: .us-west-2.elb.amazonaws.com

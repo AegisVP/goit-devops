@@ -10,10 +10,11 @@ module "vpc" {
 
 # Підключаємо модуль ECR
 module "ecr" {
-  source       = "./modules/ecr"
-  ecr_name     = "homework-07-ecr"
-  ecr_mutable  = true
-  scan_on_push = true
+  source           = "./modules/ecr"
+  ecr_name         = "homework-07-ecr"
+  ecr_mutable      = true
+  scan_on_push     = true
+  ecr_force_delete = true
 }
 
 module "eks" {

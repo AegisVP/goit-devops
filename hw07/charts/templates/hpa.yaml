@@ -2,10 +2,11 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-django
+  name: {{ .Release.Name }}-django-hpa
+  namespace: {{ .Release.Namespace }}
 spec:
   scaleTargetRef:
-    apiVersion: autoscaling/v2
+    apiVersion: apps/v1
     kind: Deployment
     name: {{ .Release.Name }}-django
   minReplicas: {{ .Values.autoscaling.minReplicas }}
