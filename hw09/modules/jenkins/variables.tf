@@ -1,6 +1,7 @@
-variable "kubeconfig" {
-  description = "Шлях до kubeconfig файлу"
+variable "namespace" {
+  description = "Назва простору імен Kubernetes для Jenkins"
   type        = string
+  default     = "jenkins"
 }
 
 variable "cluster_name" {

@@ -16,17 +16,21 @@ resource "kubernetes_storage_class_v1" "ebs_sc" {
   }
 }
 
+resource "kubernetes_namespace" "jenkins" {
+  metadata {
+    name = var.namespace
+  }
+}
+
 resource "kubernetes_service_account" "jenkins_sa" {
   metadata {
     name      = "jenkins-sa"
-    namespace = "jenkins"
+    namespace = var.namespace
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.jenkins_kaniko_role.arn
     }
   }
-  depends_on = [
-    helm_release.jenkins
-  ]
+  depends_on = [kubernetes_namespace.jenkins]
 }
 
 resource "aws_iam_role" "jenkins_kaniko_role" {
@@ -75,21 +79,13 @@ resource "aws_iam_role_policy" "jenkins_ecr_policy" {
   })
 }
 
-data "aws_eks_cluster" "eks" {
-  name = var.cluster_name
-}
-
-data "aws_eks_cluster_auth" "eks" {
-  name = var.cluster_name
-}
-
 resource "helm_release" "jenkins" {
   name             = "jenkins"
-  namespace        = "jenkins"
-  repository       = "<https://charts.jenkins.io>"
+  namespace        = var.namespace
+  repository       = "https://charts.jenkins.io"
   chart            = "jenkins"
-  version          = "5.0.16"
-  create_namespace = true
+  version          = "5.8.68"
+  create_namespace = false
 
   values = [
     file("${path.module}/values.yaml")

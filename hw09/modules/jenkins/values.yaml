@@ -9,6 +9,10 @@ controller:
     port: 80
     targetPort: 8080
 
+  serviceAccount:
+    name: jenkins-sa
+    create: false
+
   resources:
     limits:
       cpu: '500m'
@@ -33,10 +37,6 @@ controller:
     - docker-workflow:latest
     - job-dsl:latest
 
-  serviceAccount:
-    name: jenkins-sa
-    create: false
-
   JCasC:
     configScripts:
       credentials: |
@@ -48,7 +48,7 @@ controller:
                       scope: GLOBAL
                       id: github-token
                       username: AndriyDmitriv
-                      password: 
+                      password: '{{ GITHUB_TOKEN}}'
                       description: GitHub PAT
       seed-job: |
         jobs:
@@ -58,7 +58,7 @@ controller:
                 scm {
                   git {
                     remote {
-                      url('<https://github.com/AndriyDmitriv/infra.git>')
+                      url('https://github.com/AndriyDmitriv/infra.git')
                       credentials('github-token')
                     }
                     branches('*/main')
@@ -73,7 +73,7 @@ controller:
                             scm {
                               git {
                                 remote {
-                                  url("<https://github.com/AndriyDmitriv/infra.git>")
+                                  url("https://github.com/AndriyDmitriv/infra.git")
                                   credentials("github-token")
                                 }
                                 branches("*/main")
