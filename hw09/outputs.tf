@@ -49,3 +49,11 @@ output "oidc_provider_arn" {
 output "oidc_provider_url" {
   value = module.eks.oidc_provider_url
 }
+
+output "argo_cd_server_service" {
+  value = module.argo-cd.argo_cd_server_service
+}
+
+output "admin_password" {
+  value = module.argo-cd.admin_password
+}
