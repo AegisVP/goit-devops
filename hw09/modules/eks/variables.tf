@@ -1,39 +1,39 @@
 variable "region" {
-  description = "AWS region for deployment"
+  description = "AWS регіон для розгортання EKS"
   default     = "us-east-1"
 }
 
 variable "cluster_name" {
-  description = "Name of the EKS cluster"
+  description = "Назва кластера EKS"
   default     = "example-eks-cluster"
 }
 
 variable "subnet_ids" {
-  description = "List of subnet IDs for the EKS cluster"
+  description = "Список ID підмереж для кластера EKS"
   type        = list(string)
 }
 
 variable "node_group_name" {
-  description = "Name of the node group"
+  description = "Назва групи нодів"
   default     = "example-node-group"
 }
 
 variable "instance_type" {
-  description = "EKS instance type for the worker nodes"
+  description = "Тип інстансу EKS для робочих нодів"
   default     = "t3.medium"
 }
 
 variable "desired_size" {
-  description = "Desired number of worker nodes"
+  description = "Бажана кількість нодів"
   default     = 2
 }
 
 variable "max_size" {
-  description = "Maximum number of worker nodes"
+  description = "Максимальна кількість нодів"
   default     = 3
 }
 
 variable "min_size" {
-  description = "Minimum number of worker nodes"
+  description = "Мінімальна кількість нодів"
   default     = 1
 }
