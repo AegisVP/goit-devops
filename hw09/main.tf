@@ -18,7 +18,7 @@ module "vpc" {
 # Підключаємо модуль ECR
 module "ecr" {
   source           = "./modules/ecr"
-  ecr_name         = "homework-07-ecr"
+  ecr_name         = "goit-devops-hw"
   ecr_mutable      = true
   scan_on_push     = true
   ecr_force_delete = true
