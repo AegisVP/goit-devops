@@ -19,12 +19,4 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
 5. Build, tag and upload your Docker image to your ECR.
    Put the path in `./chart/values.yaml:image.repository`
 
-6. Deploy the Django application using Helm:
-   `cd charts`
-   `helm install vp-dja-app .`
-
-7. To verify the project works, run `kubectl get all`, find service/vp-dja-app-django LoadBalancer external uri and enter it in the browser. Make sure to use HTTP as HTTPS is not enabled
-
-8. `kubectl get pods` will show a list of all running pods
-
-9. `kubectl get svc -A` - get all pods in all namespaces with URLs to Jenkins, Argo-CD and the project itself.
+6. `kubectl get svc -A` - get all pods in all namespaces with URLs to access Jenkins, Argo-CD and the project itself.
