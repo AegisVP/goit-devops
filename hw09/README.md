@@ -20,3 +20,5 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
    Put the path in `./chart/values.yaml:image.repository`
 
 6. `kubectl get svc -A` - get all pods in all namespaces with URLs to access Jenkins, Argo-CD and the project itself.
+
+7. To get Argo-CD admin password, run `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
