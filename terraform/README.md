@@ -10,6 +10,8 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
 2. Apply the Terraform configuration to create AWS resources:
    `terraform apply`
 
+   2.1. You can use `terraform apply -target module.ecr` to first create the ECR registry to push your docker image and have the repository url for future steps
+
 3. Authenticate Docker to your AWS ECR registry (replace `<aws_ecr_repository_url>` with the actual ECR URL from Terraform output):
    `aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin <aws_ecr_repository_url>` # 033491664040.dkr.ecr.us-west-2.amazonaws.com/goit-devops-hw
 

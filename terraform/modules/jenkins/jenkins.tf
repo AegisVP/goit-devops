@@ -20,6 +20,8 @@ resource "kubernetes_namespace" "jenkins" {
   metadata {
     name = var.namespace
   }
+
+  depends_on = [module.eks.aws_eks_cluster.eks]
 }
 
 resource "kubernetes_service_account" "jenkins_sa" {
@@ -87,6 +89,8 @@ resource "helm_release" "jenkins" {
   version          = "5.8.68"
   create_namespace = false
   timeout          = 300
+
+  depends_on = [kubernetes_namespace.jenkins]
 
   values = [
     file("${path.module}/values.yaml")

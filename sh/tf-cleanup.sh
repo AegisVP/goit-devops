@@ -12,7 +12,7 @@ if [ -n "$1" ]; then
 fi
 
 echo "Sleeping for $SLEEP_TIME seconds before running terraform destroy..."
-(sleep $SLEEP_TIME ; cd /Users/vpysarenko/Repos/GoIT/Masters/goit-devops/hw09 && terraform apply -destroy -auto-approve) &
+(sleep $SLEEP_TIME ; cd /Users/vpysarenko/Repos/GoIT/Masters/goit-devops/terraform && terraform apply -destroy -auto-approve) &
 
 if [ $SLEEP_TIME -ne 0 ]; then
   echo "Terraform destroy command has been initiated in the background. Do not close this terminal window."

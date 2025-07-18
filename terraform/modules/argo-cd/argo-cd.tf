@@ -1,3 +1,10 @@
+resource "kubernetes_namespace" "argocd" {
+  metadata {
+    name = var.namespace
+  }
+  depends_on = [module.eks.aws_eks_cluster.eks]
+}
+
 resource "helm_release" "argo_cd" {
   name       = var.name
   namespace  = var.namespace
@@ -9,7 +16,8 @@ resource "helm_release" "argo_cd" {
     file("${path.module}/values.yaml")
   ]
 
-  create_namespace = true
+  depends_on       = [kubernetes_namespace.argocd]
+  create_namespace = false
 }
 
 resource "helm_release" "argo_apps" {
@@ -23,4 +31,3 @@ resource "helm_release" "argo_apps" {
   ]
   depends_on = [helm_release.argo_cd]
 }
-
