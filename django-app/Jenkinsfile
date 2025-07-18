@@ -28,9 +28,10 @@ spec:
   }
 
   environment {
-    ECR_REGISTRY = "864004266599.dkr.ecr.us-west-2.amazonaws.com"
-    IMAGE_NAME   = "app"
-    IMAGE_TAG    = "v1.0.${BUILD_NUMBER}"
+    // ECR_REGISTRY = "864004266599.dkr.ecr.us-west-2.amazonaws.com"
+    ECR_REGISTRY = "033491664040.dkr.ecr.us-west-2.amazonaws.com"
+    IMAGE_NAME   = "goit-devops-hw"
+    IMAGE_TAG    = "v1.${BUILD_NUMBER}"
 
     COMMIT_EMAIL = "jenkins@localhost"
     COMMIT_NAME  = "jenkins"
@@ -58,8 +59,8 @@ spec:
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
-              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AndriyDmitriv/goit-devops.git
-              cd goit-devops/django-chart
+              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AegisVP/goit-devops.git
+              cd goit-devops/django-app/charts
 
               sed -i "s/tag: .*/tag: $IMAGE_TAG/" values.yaml
 

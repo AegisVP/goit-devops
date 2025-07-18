@@ -9,8 +9,9 @@ applications:
     project: default
     source:
       repoURL: https://github.com/AegisVP/goit-devops.git
-      path: hw07/charts
-      targetRevision: main
+      path: django-app/charts
+      targetRevision: homework09 #change to `main` after PR is merged
+      # targetRevision: main
       helm:
         valueFiles:
           - values.yaml
