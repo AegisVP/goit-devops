@@ -31,28 +31,29 @@ spec:
     // ECR_REGISTRY = "864004266599.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REGISTRY = "033491664040.dkr.ecr.us-west-2.amazonaws.com"
     IMAGE_NAME   = "goit-devops-hw"
-    IMAGE_TAG    = "v1.${BUILD_NUMBER}"
+    IMAGE_TAG    = "1.${BUILD_NUMBER}"
 
     COMMIT_EMAIL = "jenkins@localhost"
     COMMIT_NAME  = "jenkins"
   }
 
   stages {
-    stage('Build & Push Docker Image') {
-      steps {
-        container('kaniko') {
-          sh '''
-            /kaniko/executor \\
-              --context `pwd` \\
-              --dockerfile `pwd`/Dockerfile \\
-              --destination=$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG \\
-              --cache=true \\
-              --insecure \\
-              --skip-tls-verify
-          '''
-        }
-      }
-    }
+    // stage('Build & Push Docker Image') {
+    //   steps {
+    //     container('kaniko') {
+    //       sh '''
+    //         cd django-app/django
+    //         /kaniko/executor \\
+    //           --context `pwd` \\
+    //           --dockerfile `pwd`/Dockerfile \\
+    //           --destination=$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG \\
+    //           --cache=false \\
+    //           --insecure \\
+    //           --skip-tls-verify
+    //       '''
+    //     }
+    //   }
+    // }
 
     stage('Update Chart Tag in Git') {
       steps {
@@ -60,17 +61,24 @@ spec:
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
               git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AegisVP/goit-devops.git
-              cd goit-devops/django-app/charts
+              echo "GIT_USERNAME: $GIT_USERNAME"
+              echo "GIT_PAT: $GIT_PAT"
+
+              cd goit-devops
+
+              git config user.name "Vlad Pysarenko"
+              git config user.email "vlad@pysarenko.com"
+              git checkout -b homework09 origin/homework09
+
+              cd django-app/charts
 
               sed -i "s/tag: .*/tag: $IMAGE_TAG/" values.yaml
 
-              git config user.email "$COMMIT_EMAIL"
-              git config user.name "$COMMIT_NAME"
-
               git add values.yaml
               git commit -m "Update image tag to $IMAGE_TAG"
-              git push origin main
+              git push origin homework09
             '''
+            // git push origin main
           }
         }
       }
