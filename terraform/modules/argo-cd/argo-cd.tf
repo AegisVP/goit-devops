@@ -19,14 +19,14 @@ resource "helm_release" "argo_cd" {
   create_namespace = false
 }
 
-# resource "helm_release" "argo_apps" {
-#   name             = "${var.name}-apps"
-#   chart            = "${path.module}/charts"
-#   namespace        = var.namespace
-#   create_namespace = false
+resource "helm_release" "argo_apps" {
+  name             = "${var.name}-apps"
+  chart            = "${path.root}/../django-app/charts"
+  namespace        = var.namespace
+  create_namespace = false
 
-#   values = [
-#     file("${path.module}/values.yaml")
-#   ]
-#   depends_on = [helm_release.argo_cd]
-# }
+  values = [
+    file("${path.module}/values.yaml")
+  ]
+  depends_on = [helm_release.argo_cd]
+}

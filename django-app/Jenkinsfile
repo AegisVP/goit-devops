@@ -31,10 +31,9 @@ spec:
     // ECR_REGISTRY = "864004266599.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REGISTRY = "033491664040.dkr.ecr.us-west-2.amazonaws.com"
     IMAGE_NAME   = "goit-devops-hw"
-    IMAGE_TAG    = "1.${BUILD_NUMBER}"
-
-    COMMIT_EMAIL = "jenkins@localhost"
-    COMMIT_NAME  = "jenkins"
+    IMAGE_TAG    = "v1.${BUILD_NUMBER}"
+    COMMIT_NAME  = "Vlad Pysarenko (Jenkins)"
+    COMMIT_EMAIL = "vlad@pysarenko.com"
   }
 
   stages {
@@ -61,13 +60,11 @@ spec:
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
               git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AegisVP/goit-devops.git
-              echo "GIT_USERNAME: $GIT_USERNAME"
-              echo "GIT_PAT: $GIT_PAT"
 
               cd goit-devops
 
-              git config user.name "Vlad Pysarenko"
-              git config user.email "vlad@pysarenko.com"
+              git config user.name $COMMIT_NAME
+              git config user.email $COMMIT_EMAIL
               git checkout -b homework09 origin/homework09
 
               cd django-app/charts
@@ -84,4 +81,12 @@ spec:
       }
     }
   }
+
+  // triggers {
+  //   githubPush {
+  //     githubUrl('https://github.com/AegisVP/goit-devops')
+  //     branch('main')
+  //     folder('django-app')
+  //   }
+  // }
 }

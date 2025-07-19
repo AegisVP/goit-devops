@@ -23,4 +23,6 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
 
 6. `kubectl get svc -A` - get all pods in all namespaces with URLs to access Jenkins, Argo-CD and the project itself.
 
+- Jenkins -> manage -> nodes -> default node -> number of executors = 1
+
 7. To get Argo-CD admin password, run `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`

@@ -26,6 +26,8 @@ controller:
     storageClass: 'ebs-sc'
     size: 10Gi
 
+  numExecutors: 2
+
   installPlugins:
     - kubernetes:latest
     - workflow-aggregator:latest
@@ -79,6 +81,7 @@ controller:
                                 branches("*/homework09")
                               }
                             }
+                            scriptPath("django-app/Jenkinsfile")
                           }
                         }
                       }
