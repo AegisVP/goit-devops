@@ -4,7 +4,7 @@
 
 _\* all other modules are disabled to prevent errors (because HW09 is not complete) and to speed up installation_
 
-1. Choose if you want Aurora or RDS instance. Modify `/terraform/main.tf` and set the `useAurora` variable in the RDS module definition (`true` for Aurora, `false` for RDS) and save the file
+1. Choose if you want Aurora or RDS instance. Modify `/terraform/main.tf` and set the `useAurora` variable in `module "rds"` definition section (`true` for Aurora, `false` for RDS) and save the file
 
 2. Initialize Terraform with `terraform init`
 
