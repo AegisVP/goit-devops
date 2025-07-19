@@ -47,8 +47,8 @@ controller:
                   - usernamePassword:
                       scope: GLOBAL
                       id: github-token
-                      username: AndriyDmitriv
-                      password: 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
+                      username: AegisVP
+                      password: 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
                       description: GitHub PAT
       seed-job: |
         jobs:
@@ -58,10 +58,10 @@ controller:
                 scm {
                   git {
                     remote {
-                      url('https://github.com/AndriyDmitriv/infra.git')
+                      url('https://github.com/AegisVP/goit-devops.git')
                       credentials('github-token')
                     }
-                    branches('*/main')
+                    branches('*/homework09')
                   }
                 }
                 steps {
@@ -73,10 +73,10 @@ controller:
                             scm {
                               git {
                                 remote {
-                                  url("https://github.com/AndriyDmitriv/infra.git")
+                                  url("https://github.com/AegisVP/goit-devops.git")
                                   credentials("github-token")
                                 }
-                                branches("*/main")
+                                branches("*/homework09")
                               }
                             }
                           }
