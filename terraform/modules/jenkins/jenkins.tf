@@ -20,8 +20,6 @@ resource "kubernetes_namespace" "jenkins" {
   metadata {
     name = var.namespace
   }
-
-  depends_on = [module.eks.aws_eks_cluster.eks]
 }
 
 resource "kubernetes_service_account" "jenkins_sa" {
