@@ -15,65 +15,108 @@ module "vpc" {
   vpc_name           = "vpc"                                         # Ім'я VPC
 }
 
-# Підключаємо модуль ECR
-module "ecr" {
-  source           = "./modules/ecr"
-  ecr_name         = "goit-devops-hw"
-  ecr_mutable      = true
-  scan_on_push     = true
-  ecr_force_delete = true
-}
+# Підключаємо модуль ECR - Відключений, не потрібен для RDS
+# module "ecr" {
+#   source           = "./modules/ecr"
+#   ecr_name         = "goit-devops-hw"
+#   ecr_mutable      = true
+#   scan_on_push     = true
+#   ecr_force_delete = true
+# }
 
-module "eks" {
-  source        = "./modules/eks"
-  cluster_name  = "eks-cluster-demo"        # Назва кластера
-  subnet_ids    = module.vpc.public_subnets # ID підмереж
-  instance_type = "t3.medium"               # Тип інстансів
-  desired_size  = 1                         # Бажана кількість нодів
-  max_size      = 2                         # Максимальна кількість нодів
-  min_size      = 1                         # Мінімальна кількість нодів
-}
+# Підключаємо модуль EKS - Відключений, не потрібен для RDS
+# module "eks" {
+#   source        = "./modules/eks"
+#   cluster_name  = "eks-cluster-demo"        # Назва кластера
+#   subnet_ids    = module.vpc.public_subnets # ID підмереж
+#   instance_type = "t3.medium"               # Тип інстансів
+#   desired_size  = 1                         # Бажана кількість нодів
+#   max_size      = 2                         # Максимальна кількість нодів
+#   min_size      = 1                         # Мінімальна кількість нодів
+# }
 
-data "aws_eks_cluster" "eks" {
-  name       = module.eks.eks_cluster_name
-  depends_on = [module.eks]
-}
+module "rds" {
+  source = "./modules/rds"
 
-data "aws_eks_cluster_auth" "eks" {
-  name       = module.eks.eks_cluster_name
-  depends_on = [module.eks]
-}
+  name                  = "myapp-db"
+  use_aurora            = false
+  aurora_instance_count = 2
 
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.eks.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.eks.token
-}
+  # --- Aurora-only ---
+  engine_cluster                = "aurora-postgresql"
+  engine_version_cluster        = "15.3"
+  parameter_group_family_aurora = "aurora-postgresql15"
 
-provider "helm" {
-  kubernetes = {
-    host                   = data.aws_eks_cluster.eks.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.eks.token
+  # --- RDS-only ---
+  engine                     = "postgres"
+  engine_version             = "17.2"
+  parameter_group_family_rds = "postgres17"
+
+  # Common
+  instance_class          = "db.t3.medium"
+  allocated_storage       = 20
+  db_name                 = "myapp"
+  username                = "postgres"
+  password                = "admin123AWS23"
+  subnet_private_ids      = module.vpc.private_subnets
+  subnet_public_ids       = module.vpc.public_subnets
+  publicly_accessible     = true
+  vpc_id                  = module.vpc.vpc_id
+  multi_az                = true
+  backup_retention_period = 7
+  parameters = {
+    max_connections            = "200"
+    log_min_duration_statement = "500"
+  }
+
+  tags = {
+    Environment = "dev"
+    Project     = "myapp"
   }
 }
 
-module "jenkins" {
-  source            = "./modules/jenkins"
-  cluster_name      = module.eks.eks_cluster_name
-  namespace         = "jenkins"
-  oidc_provider_arn = module.eks.oidc_provider_arn
-  oidc_provider_url = module.eks.oidc_provider_url
-  depends_on        = [module.eks]
+# Відключаємо всі наступні модулі, так як ДЗ9 не завершена
 
-  providers = {
-    helm       = helm
-    kubernetes = kubernetes
-  }
-}
+# data "aws_eks_cluster" "eks" {
+#   name       = module.eks.eks_cluster_name
+#   depends_on = [module.eks]
+# }
 
-module "argo-cd" {
-  source        = "./modules/argo-cd"
-  namespace     = "argocd"
-  chart_version = "8.1.3"
-}
+# data "aws_eks_cluster_auth" "eks" {
+#   name       = module.eks.eks_cluster_name
+#   depends_on = [module.eks]
+# }
+
+# provider "kubernetes" {
+#   host                   = data.aws_eks_cluster.eks.endpoint
+#   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+#   token                  = data.aws_eks_cluster_auth.eks.token
+# }
+
+# provider "helm" {
+#   kubernetes = {
+#     host                   = data.aws_eks_cluster.eks.endpoint
+#     cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+#     token                  = data.aws_eks_cluster_auth.eks.token
+#   }
+# }
+
+# module "jenkins" {
+#   source            = "./modules/jenkins"
+#   cluster_name      = module.eks.eks_cluster_name
+#   namespace         = "jenkins"
+#   oidc_provider_arn = module.eks.oidc_provider_arn
+#   oidc_provider_url = module.eks.oidc_provider_url
+#   depends_on        = [module.eks]
+
+#   providers = {
+#     helm       = helm
+#     kubernetes = kubernetes
+#   }
+# }
+
+# module "argo-cd" {
+#   source        = "./modules/argo-cd"
+#   namespace     = "argocd"
+#   chart_version = "8.1.3"
+# }
