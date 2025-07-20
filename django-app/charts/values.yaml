@@ -1,6 +1,6 @@
 image:
   repository: 033491664040.dkr.ecr.us-west-2.amazonaws.com/goit-devops-hw
-  tag: v1.0
+  tag: v1.0.0
   pullPolicy: Always
 
 service:
