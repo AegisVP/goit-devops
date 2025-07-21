@@ -10,13 +10,13 @@ output "eks_node_role_arn" {
   value = module.eks.eks_node_role_arn
 }
 
-output "ecr_repository_url" {
-  value = module.ecr.ecr_repository_url
-}
+# output "ecr_repository_url" {
+#   value = module.ecr.ecr_repository_url
+# }
 
-output "ecr_repository_arn" {
-  value = module.ecr.ecr_repository_arn
-}
+# output "ecr_repository_arn" {
+#   value = module.ecr.ecr_repository_arn
+# }
 
 output "vpc_id" {
   value = module.vpc.vpc_id
@@ -48,10 +48,6 @@ output "oidc_provider_arn" {
 
 output "oidc_provider_url" {
   value = module.eks.oidc_provider_url
-}
-
-output "argo_cd_server_service" {
-  value = module.argo-cd.argo_cd_server_service
 }
 
 output "admin_password" {

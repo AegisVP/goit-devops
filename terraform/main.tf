@@ -7,26 +7,26 @@
 
 # Підключаємо модуль для VPC
 module "vpc" {
-  source             = "./modules/vpc"                               # Шлях до модуля VPC
-  vpc_cidr_block     = "10.0.0.0/16"                                 # CIDR блок для VPC
-  public_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"] # Публічні підмережі
-  private_subnets    = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"] # Приватні підмережі
-  availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]    # Зони доступності
-  vpc_name           = "vpc"                                         # Ім'я VPC
+  source             = "./modules/vpc"                                                    # Шлях до модуля VPC
+  vpc_cidr_block     = "10.0.0.0/16"                                                      # CIDR блок для VPC
+  public_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]                      # Публічні підмережі
+  private_subnets    = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]                      # Приватні підмережі
+  availability_zones = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"] # Зони доступності
+  vpc_name           = "vpc"                                                              # Ім'я VPC
 }
 
 # Підключаємо модуль ECR
-module "ecr" {
-  source           = "./modules/ecr"
-  ecr_name         = "goit-devops-hw"
-  ecr_mutable      = true
-  scan_on_push     = true
-  ecr_force_delete = true
-}
+# module "ecr" {
+#   source           = "./modules/ecr"
+#   ecr_name         = "goit-devops-hw"
+#   ecr_mutable      = true
+#   scan_on_push     = true
+#   ecr_force_delete = true
+# }
 
 module "eks" {
   source        = "./modules/eks"
-  cluster_name  = "eks-cluster-demo"        # Назва кластера
+  cluster_name  = "eks-vp"                  # Назва кластера
   subnet_ids    = module.vpc.public_subnets # ID підмереж
   instance_type = "t3.medium"               # Тип інстансів
   desired_size  = 1                         # Бажана кількість нодів
@@ -64,6 +64,10 @@ module "jenkins" {
   namespace         = "jenkins"
   oidc_provider_arn = module.eks.oidc_provider_arn
   oidc_provider_url = module.eks.oidc_provider_url
+  github_login      = var.github_login
+  github_token      = var.github_token
+  github_repo       = var.github_repo
+  github_branch     = "homework09" # after MR is merged, this will be 'main'
   depends_on        = [module.eks]
 
   providers = {
@@ -76,4 +80,7 @@ module "argo-cd" {
   source        = "./modules/argo-cd"
   namespace     = "argocd"
   chart_version = "8.1.3"
+  github_repo   = var.github_repo
+  github_branch = "homework09" # after MR is merged, this will be 'main'
+  depends_on    = [module.eks]
 }

@@ -49,8 +49,8 @@ controller:
                   - usernamePassword:
                       scope: GLOBAL
                       id: github-token
-                      username: AegisVP
-                      password: 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
+                      username: ${github_login}
+                      password: ${github_token}
                       description: GitHub PAT
       seed-job: |
         jobs:
@@ -60,10 +60,10 @@ controller:
                 scm {
                   git {
                     remote {
-                      url('https://github.com/AegisVP/goit-devops.git')
+                      url('${github_repo}')
                       credentials('github-token')
                     }
-                    branches('*/homework09')
+                    branches('*/${github_branch}')
                   }
                 }
                 steps {
@@ -72,16 +72,16 @@ controller:
                       pipelineJob("goit-django-docker") {
                         definition {
                           cpsScm {
+                            scriptPath("django-app/Jenkinsfile")
                             scm {
                               git {
                                 remote {
-                                  url("https://github.com/AegisVP/goit-devops.git")
+                                  url("${github_repo}")
                                   credentials("github-token")
                                 }
-                                branches("*/homework09")
+                                branches("*/${github_branch}")
                               }
                             }
-                            scriptPath("django-app/Jenkinsfile")
                           }
                         }
                       }
