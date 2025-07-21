@@ -65,7 +65,7 @@ resource "aws_eks_node_group" "general" {
 
   # Node update configuration
   update_config {
-    max_unavailable = 1 # Maximum number of nodes that can be updated simultaneously
+    max_unavailable = 2 # Maximum number of nodes that can be updated simultaneously
   }
 
   # Adds labels to nodes

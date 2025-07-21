@@ -11,7 +11,7 @@ spec:
   serviceAccountName: jenkins-sa
   containers:
     - name: kaniko
-      image: gcr.io/kaniko-project/executor:v1.24.0-debug
+      image: gcr.io/kaniko-project/executor:v1.16.0-debug
       imagePullPolicy: Always
       command:
         - sleep
