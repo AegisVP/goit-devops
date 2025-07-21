@@ -79,6 +79,15 @@ resource "aws_iam_role_policy" "jenkins_ecr_policy" {
   })
 }
 
+locals {
+  jenkins_values = templatefile("${path.module}/values.tpl", {
+    github_login  = var.github_login,
+    github_token  = var.github_token,
+    github_repo   = var.github_repo,
+    github_branch = var.github_branch,
+  })
+}
+
 resource "helm_release" "jenkins" {
   name             = "jenkins"
   namespace        = var.namespace
@@ -90,7 +99,5 @@ resource "helm_release" "jenkins" {
 
   depends_on = [kubernetes_namespace.jenkins]
 
-  values = [
-    file("${path.module}/values.yaml")
-  ]
+  values = [local.jenkins_values]
 }

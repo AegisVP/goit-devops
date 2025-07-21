@@ -28,47 +28,42 @@ spec:
   }
 
   environment {
-    // ECR_REGISTRY = "864004266599.dkr.ecr.us-west-2.amazonaws.com"
     ECR_REGISTRY = "033491664040.dkr.ecr.us-west-2.amazonaws.com"
     IMAGE_NAME   = "goit-devops-hw"
-    IMAGE_TAG    = "1.${BUILD_NUMBER}"
-
-    COMMIT_EMAIL = "jenkins@localhost"
-    COMMIT_NAME  = "jenkins"
+    IMAGE_TAG    = "v1.0.${BUILD_NUMBER}"
+    COMMIT_NAME  = "Jenkins CI"
+    COMMIT_EMAIL = "jenkins@django-app.svc"
   }
 
   stages {
-    // stage('Build & Push Docker Image') {
-    //   steps {
-    //     container('kaniko') {
-    //       sh '''
-    //         cd django-app/django
-    //         /kaniko/executor \\
-    //           --context `pwd` \\
-    //           --dockerfile `pwd`/Dockerfile \\
-    //           --destination=$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG \\
-    //           --cache=false \\
-    //           --insecure \\
-    //           --skip-tls-verify
-    //       '''
-    //     }
-    //   }
-    // }
+    stage('Build & Push Docker Image') {
+      steps {
+        container('kaniko') {
+          sh '''
+            cd django-app/django
+            /kaniko/executor \\
+              --context `pwd` \\
+              --dockerfile `pwd`/Dockerfile \\
+              --destination=$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG \\
+              --cache=false \\
+              --insecure \\
+              --skip-tls-verify
+          '''
+        }
+      }
+    }
 
     stage('Update Chart Tag in Git') {
       steps {
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
             sh '''
-              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AegisVP/goit-devops.git
-              echo "GIT_USERNAME: $GIT_USERNAME"
-              echo "GIT_PAT: $GIT_PAT"
+              git config --global --add safe.directory `pwd`
+              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AegisVP/goit-devops.git -b homework09
 
               cd goit-devops
-
-              git config user.name "Vlad Pysarenko"
-              git config user.email "vlad@pysarenko.com"
-              git checkout -b homework09 origin/homework09
+              git config user.name "$COMMIT_NAME"
+              git config user.email "$COMMIT_EMAIL"
 
               cd django-app/charts
 
@@ -84,4 +79,12 @@ spec:
       }
     }
   }
+
+  // triggers {
+  //   githubPush {
+  //     githubUrl('https://github.com/AegisVP/goit-devops')
+  //     branch('main')
+  //     folder('django-app')
+  //   }
+  // }
 }

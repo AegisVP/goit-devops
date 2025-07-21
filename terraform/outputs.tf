@@ -57,3 +57,4 @@ output "internet_gateway_id" {
 # output "admin_password" {
 #   value = module.argo-cd.admin_password
 # }
+
