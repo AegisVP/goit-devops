@@ -15,8 +15,8 @@ controller:
 
   resources:
     limits:
-      cpu: '500m'
-      memory: '1Gi'
+      cpu: '1000m'
+      memory: '2Gi'
     requests:
       cpu: '250m'
       memory: '512Mi'
@@ -26,7 +26,7 @@ controller:
     storageClass: 'ebs-sc'
     size: 10Gi
 
-  numExecutors: 2
+  numExecutors: 1
 
   installPlugins:
     - kubernetes:latest
