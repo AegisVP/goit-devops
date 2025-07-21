@@ -15,3 +15,13 @@ variable "chart_version" {
   type        = string
   default     = "8.1.3"
 }
+
+variable "github_repo" {
+  description = "Github Repository URL"
+  type        = string
+}
+
+variable "github_branch" {
+  description = "Github Branch"
+  type        = string
+}

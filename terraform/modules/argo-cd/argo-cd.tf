@@ -17,11 +17,18 @@ resource "helm_release" "argo_cd" {
   create_namespace = false
 }
 
+locals {
+  argocd_values = templatefile("${path.module}/charts/values.tpl", {
+    github_repo   = var.github_repo
+    github_branch = var.github_branch
+  })
+}
+
 resource "helm_release" "argo_apps" {
   name             = "${var.name}-apps"
   chart            = "${path.module}/charts"
   namespace        = var.namespace
   create_namespace = false
-  values           = [file("${path.module}/charts/values.yaml")]
+  values           = [local.argocd_values]
   depends_on       = [helm_release.argo_cd]
 }
