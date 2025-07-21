@@ -1,37 +1,55 @@
-# Підключаємо модуль для S3 та DynamoDB
-# module "s3_backend" {
-#   source      = "./modules/s3-backend"                      # Шлях до модуля
-#   bucket_name = "vpysarenko-terraform-state-goit-devops-hw" # Ім'я S3-бакета
-#   table_name  = "terraform-locks"                           # Ім'я DynamoDB
+# # Importing S3 and DynamoDB
+# import {
+#   to = module.s3_backend.aws_s3_bucket.terraform_state
+#   id = var.s3_bucket_name
 # }
 
-# Підключаємо модуль для VPC
+# import {
+#   to = module.s3_backend.aws_dynamodb_table.terraform_locks
+#   id = var.dynamodb_table_name
+# }
+
+# # Creating S3 and DynamoDB
+# module "s3_backend" {
+#   source      = "./modules/s3-backend"  # Path to module
+#   bucket_name = var.s3_bucket_name      # Name of S3 bucket
+#   table_name  = var.dynamodb_table_name # Name of DynamoDB
+# }
+
+# Creating VPC
 module "vpc" {
-  source             = "./modules/vpc"                                                    # Шлях до модуля VPC
-  vpc_cidr_block     = "10.0.0.0/16"                                                      # CIDR блок для VPC
-  public_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]                      # Публічні підмережі
-  private_subnets    = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]                      # Приватні підмережі
-  availability_zones = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"] # Зони доступності
-  vpc_name           = "vpc"                                                              # Ім'я VPC
+  source             = "./modules/vpc"                                                    # Path to the VPC module
+  vpc_cidr_block     = "10.0.0.0/16"                                                      # CIDR block for VPC
+  public_subnets     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]                      # Public subnets
+  private_subnets    = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]                      # Private subnets
+  availability_zones = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"] # Accessibility zones
+  vpc_name           = "goit-hw"                                                          # Name of VPC
 }
 
-# Підключаємо модуль ECR
-# module "ecr" {
-#   source           = "./modules/ecr"
-#   ecr_name         = "goit-devops-hw"
-#   ecr_mutable      = true
-#   scan_on_push     = true
-#   ecr_force_delete = true
-# }
+# Importing ECR
+import {
+  to = module.ecr.aws_ecr_repository.ecr_repository
+  id = var.ecr_repository_name
+}
 
+# Creating ECR
+module "ecr" {
+  source           = "./modules/ecr"
+  ecr_name         = var.ecr_repository_name
+  ecr_mutable      = true
+  scan_on_push     = true
+  ecr_force_delete = true
+}
+
+# Creating EKS
 module "eks" {
   source        = "./modules/eks"
-  cluster_name  = "eks-vp"                  # Назва кластера
-  subnet_ids    = module.vpc.public_subnets # ID підмереж
-  instance_type = "t3.medium"               # Тип інстансів
-  desired_size  = 1                         # Бажана кількість нодів
-  max_size      = 2                         # Максимальна кількість нодів
-  min_size      = 1                         # Мінімальна кількість нодів
+  cluster_name  = "eks-vp"
+  subnet_ids    = module.vpc.public_subnets
+  instance_type = "t3.medium"
+  desired_size  = 1
+  max_size      = 2
+  min_size      = 1
 }
 
 data "aws_eks_cluster" "eks" {
@@ -58,6 +76,7 @@ provider "helm" {
   }
 }
 
+# Creating Jenkins
 module "jenkins" {
   source            = "./modules/jenkins"
   cluster_name      = module.eks.eks_cluster_name
@@ -76,6 +95,7 @@ module "jenkins" {
   }
 }
 
+# Creating Argo-CD
 module "argo-cd" {
   source        = "./modules/argo-cd"
   namespace     = "argocd"

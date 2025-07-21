@@ -1,20 +1,20 @@
 variable "ecr_name" {
-  description = "Ім'я ECR репозиторію"
+  description = "Name of the ECR repository"
   type        = string
 }
 
 variable "ecr_mutable" {
-  description = "Вмикає або вимикає мутабельність тегів контейнерів"
+  description = "Enables or disables mutability of container tags"
   type        = bool
 }
 
 variable "scan_on_push" {
-  description = "Вмикає або вимикає сканування на пуш"
+  description = "Enables or disables scanning on push"
   type        = bool
 }
 
 variable "ecr_force_delete" {
-  description = "Дозволяє видаляти репозиторій з усіма образами"
+  description = "Allows deleting the repository with all images"
   type        = bool
   default     = false
 }

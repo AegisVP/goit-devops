@@ -1,20 +1,20 @@
 output "vpc_id" {
-  description = "ID створеної VPC"
+  description = "ID of the created VPC"
   value       = aws_vpc.main.id
 }
 
 output "public_subnets" {
-  description = "Список ID публічних підмереж"
+  description = "List of public subnet IDs"
   value       = aws_subnet.public[*].id
 }
 
 output "private_subnets" {
-  description = "Список ID приватних підмереж"
+  description = "List of private subnet IDs"
   value       = aws_subnet.private[*].id
 }
 
 output "internet_gateway_id" {
-  description = "ID Internet Gateway"
+  description = "ID of Internet Gateway"
   value       = aws_internet_gateway.igw.id
 }
 
