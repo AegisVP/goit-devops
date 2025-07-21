@@ -1,0 +1,34 @@
+server:
+  service:
+    type: LoadBalancer
+    port: 443
+
+applications:
+  - name: vp-dja-app
+    namespace: default
+    project: default
+    source:
+      repoURL: https://github.com/AegisVP/goit-devops.git
+      path: django-app/charts
+      targetRevision: homework09 #change to `main` after PR is merged
+      # targetRevision: main
+      helm:
+        valueFiles:
+          - values.yaml
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: django
+    syncPolicy:
+      syncOptions:
+        - CreateNamespace=true
+      automated:
+        prune: true
+        selfHeal: true
+
+repositories:
+  - name: vp-dja-app
+    url: https://github.com/AegisVP/goit-devops.git
+
+repoConfig:
+  insecure: true
+  enableLfs: true

@@ -1,0 +1,26 @@
+image:
+  repository: 033491664040.dkr.ecr.us-west-2.amazonaws.com/goit-devops-hw
+  tag: 1.0
+  pullPolicy: Always
+
+service:
+  type: LoadBalancer
+  port: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /
+  pathType: Prefix
+  tls: false
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPU: 70
+
+config:
+  DJANGO_SECRET_KEY: 'o*vm=+3iy*mp3c0dhg+=np8dp%za+2xt%bp4_$zc3x-8$aw91c'
+  DJANGO_ALLOWED_HOSTS: '*'
+  ALLOWED_HOSTS: .us-west-2.elb.amazonaws.com

@@ -1,0 +1,87 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: jenkins-kaniko
+spec:
+  serviceAccountName: jenkins-sa
+  containers:
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:v1.16.0-debug
+      imagePullPolicy: Always
+      command:
+        - sleep
+      args:
+        - 99d
+    - name: git
+      image: alpine/git
+      command:
+        - sleep
+      args:
+        - 99d
+"""
+    }
+  }
+
+  environment {
+    // ECR_REGISTRY = "864004266599.dkr.ecr.us-west-2.amazonaws.com"
+    ECR_REGISTRY = "033491664040.dkr.ecr.us-west-2.amazonaws.com"
+    IMAGE_NAME   = "goit-devops-hw"
+    IMAGE_TAG    = "1.${BUILD_NUMBER}"
+
+    COMMIT_EMAIL = "jenkins@localhost"
+    COMMIT_NAME  = "jenkins"
+  }
+
+  stages {
+    // stage('Build & Push Docker Image') {
+    //   steps {
+    //     container('kaniko') {
+    //       sh '''
+    //         cd django-app/django
+    //         /kaniko/executor \\
+    //           --context `pwd` \\
+    //           --dockerfile `pwd`/Dockerfile \\
+    //           --destination=$ECR_REGISTRY/$IMAGE_NAME:$IMAGE_TAG \\
+    //           --cache=false \\
+    //           --insecure \\
+    //           --skip-tls-verify
+    //       '''
+    //     }
+    //   }
+    // }
+
+    stage('Update Chart Tag in Git') {
+      steps {
+        container('git') {
+          withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PAT')]) {
+            sh '''
+              git clone https://$GIT_USERNAME:$GIT_PAT@github.com/AegisVP/goit-devops.git
+              echo "GIT_USERNAME: $GIT_USERNAME"
+              echo "GIT_PAT: $GIT_PAT"
+
+              cd goit-devops
+
+              git config user.name "Vlad Pysarenko"
+              git config user.email "vlad@pysarenko.com"
+              git checkout -b homework09 origin/homework09
+
+              cd django-app/charts
+
+              sed -i "s/tag: .*/tag: $IMAGE_TAG/" values.yaml
+
+              git add values.yaml
+              git commit -m "Update image tag to $IMAGE_TAG"
+              git push
+            '''
+            // git push origin main
+          }
+        }
+      }
+    }
+  }
+}
