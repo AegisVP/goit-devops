@@ -70,6 +70,16 @@ controller:
                   dsl {
                     text('''
                       pipelineJob("goit-django-docker") {
+                        properties {
+                          pipelineTriggers {
+                            triggers {
+                              githubPush {}
+                              pollSCM {
+                                scmpoll_spec('H/3 * * * *')
+                              }
+                            }
+                          }
+                        }
                         definition {
                           cpsScm {
                             scriptPath("django-app/Jenkinsfile")
