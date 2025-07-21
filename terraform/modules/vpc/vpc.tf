@@ -36,7 +36,8 @@ resource "aws_subnet" "private" {
 
 # Створюємо Internet Gateway для публічних підмереж
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id # Прив'язуємо Internet Gateway до VPC для виходу в інтернет
+  vpc_id     = aws_vpc.main.id                         # Прив'язуємо Internet Gateway до VPC для виходу в інтернет
+  depends_on = [aws_subnet.private, aws_subnet.public] # Залежність від створення підмереж, щоб Gateway був готовий після їх створення
 
   tags = {
     Name = "${var.vpc_name}-igw" # Тег для ідентифікації Internet Gateway
