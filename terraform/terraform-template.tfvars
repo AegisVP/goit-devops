@@ -1,5 +1,5 @@
 # Template for file `terraform.tfvars` that contains secrets
-
-GITHUB_REPO =
-GITHUB_LOGIN =
-GITHUB_TOKEN =
+aws_region   =
+github_repo  =
+github_login =
+github_token =
