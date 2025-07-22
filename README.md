@@ -21,7 +21,7 @@ This project provisions an AWS infrastructure using Terraform, including a VPC, 
 1. Initialize Terraform:
    `terraform init`
 
-2. If you don't have an ECR, you can use `terraform apply -target module.ecr` or create it manually. Note the ECR URL
+2. If you don't have an ECR, you can use `terraform apply -target module.ecr` or create it manually. Note the ECR URL for further steps
 
 3. Authenticate Docker to your AWS ECR (replace `<aws_ecr_url>` with the actual ECR URL from above):
    `aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin <aws_ecr_url>` # 033491664040.dkr.ecr.us-west-2.amazonaws.com/goit-devops-hw
