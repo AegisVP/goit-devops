@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:15
-    container_name: postres_db
+    container_name: postgres_db
     env_file:
       - .env
     volumes:
